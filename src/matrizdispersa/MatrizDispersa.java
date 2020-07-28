@@ -4,8 +4,11 @@ package matrizdispersa;
 import java.awt.Color;
 import java.awt.Container;
 import java.awt.Dimension;
+import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import javax.swing.Icon;
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -19,12 +22,12 @@ public class MatrizDispersa extends JFrame implements ActionListener {
     JButton botonIngresoB = new JButton("Ingresar en la matriz B");
     JButton botonSumar = new JButton("Sumar las dos matrices (A + B)");
     
-    JTextField columnaA = new JTextField();
-    JTextField columnaB = new JTextField();
-    JTextField filaA = new JTextField();
-    JTextField filaB = new JTextField();
-    JTextField valorA = new JTextField();
-    JTextField valorB = new JTextField();
+    JTextField columnaA = new JTextField("5");
+    JTextField columnaB = new JTextField("3");
+    JTextField filaA = new JTextField("5");
+    JTextField filaB = new JTextField("3");
+    JTextField valorA = new JTextField("5");
+    JTextField valorB = new JTextField("3");
     
     JLabel texto1 = new JLabel("Ingrese las coordenasa de la matriz A");
     JLabel texto2 = new JLabel("Ingrese las coordenasa de la matriz B");
@@ -41,6 +44,9 @@ public class MatrizDispersa extends JFrame implements ActionListener {
     JScrollPane panelExternoA = new JScrollPane();
     JScrollPane panelExternoB = new JScrollPane();
     JScrollPane panelExternoR = new JScrollPane();
+    
+    ListaColumnas matrizA = new ListaColumnas();
+    ListaColumnas matrizB = new ListaColumnas();
     
     public static void main(String[] args) {
 
@@ -66,13 +72,6 @@ public class MatrizDispersa extends JFrame implements ActionListener {
         c.add(textoCB);
         c.add(textoFB);
         c.add(textoVB);
-        
-        c.add(panelInternoA);
-        c.add(panelExternoA);
-        c.add(panelInternoB);
-        c.add(panelExternoB);
-        c.add(panelInternoR);
-        c.add(panelExternoR);
      
         c.add(columnaA);
         c.add(columnaB);
@@ -106,8 +105,8 @@ public class MatrizDispersa extends JFrame implements ActionListener {
         panelExternoA.setPreferredSize(new Dimension(400, 350));
         panelExternoA.setBackground(Color.BLUE);
         
-        panelInternoA.setBounds(10, 110, 400, 350);
-        panelInternoA.setPreferredSize(new Dimension(400, 350));
+        panelInternoA.setBounds(10, 110, 2000, 2000);
+        panelInternoA.setPreferredSize(new Dimension(2000, 2000));
         panelInternoA.setBackground(Color.LIGHT_GRAY);
 
         texto2.setBounds(370, 10, 300, 30);
@@ -127,8 +126,8 @@ public class MatrizDispersa extends JFrame implements ActionListener {
         panelExternoB.setPreferredSize(new Dimension(400, 350));
         panelExternoB.setBackground(Color.BLUE);
         
-        panelInternoB.setBounds(420, 110, 400, 350);
-        panelInternoB.setPreferredSize(new Dimension(400, 350));
+        panelInternoB.setBounds(420, 110, 2000, 2000);
+        panelInternoB.setPreferredSize(new Dimension(2000, 2000));
         panelInternoB.setBackground(Color.LIGHT_GRAY);
         
         botonSumar.setBounds(830, 70, 250, 30);
@@ -139,9 +138,73 @@ public class MatrizDispersa extends JFrame implements ActionListener {
         panelExternoR.setPreferredSize(new Dimension(400, 350));
         panelExternoR.setBackground(Color.BLUE);
         
-        panelInternoR.setBounds(830, 110, 400, 350);
-        panelInternoR.setPreferredSize(new Dimension(400, 350));
+        panelInternoR.setBounds(830, 110, 2000, 2000);
+        panelInternoR.setPreferredSize(new Dimension(2000, 2000));
         panelInternoR.setBackground(Color.LIGHT_GRAY);
+        
+    }
+    
+    public void pintar(JScrollPane panelInterno, JScrollPane panelExterno, ListaColumnas matriz){
+        
+        panelInterno.removeAll();
+        
+        NodoColumna columna = matriz.getCabezaColumna();
+        System.out.println("Columnas: " + matriz.getColumnas());
+        
+        for(int i = 0; i < matriz.getColumnas(); i++){
+            
+            System.out.println("Filas: " + columna.getCantidadFilas());
+            
+            JLabel indiceColumna = new JLabel(String.valueOf(columna.getIndiceColumna()));
+            indiceColumna.setBounds((i*80) , 0, 150, 30);
+            
+            panelInterno.add(indiceColumna);
+            
+            NodoFila fila = columna.getFilas().getCabezaFila();
+            
+            for(int j = 0; j < columna.getCantidadFilas(); j++){
+            
+                JLabel img = new JLabel();
+        
+                ImageIcon imgIcon = new ImageIcon(getClass().getResource("Abajo.png"));
+
+                Image imgEscalada = imgIcon.getImage().getScaledInstance(30,50, Image.SCALE_SMOOTH);
+                Icon iconoEscalado = new ImageIcon(imgEscalada);
+                img.setBounds(i*80 , 40 + (j*100), 30, 50);
+                img.setIcon(iconoEscalado);
+                
+                JLabel indiceFila = new JLabel(String.valueOf(fila.getIndiceFila() + ", " + fila.getValor()));
+                indiceFila.setBounds(i*80 , 90 + (j*100), 150, 50);
+
+                panelInterno.add(indiceFila);
+                
+                panelInterno.add(img);
+                
+                fila = fila.getAbajo();
+                
+            }
+            
+            if(i < matriz.getColumnas() -1){
+                
+                JLabel img2 = new JLabel();
+        
+                ImageIcon imgIcon = new ImageIcon(getClass().getResource("Derecha.png"));
+
+                Image imgEscalada = imgIcon.getImage().getScaledInstance(50,30, Image.SCALE_SMOOTH);
+                Icon iconoEscalado = new ImageIcon(imgEscalada);
+                img2.setBounds(20 + (i*80) , 0, 50, 30);
+                img2.setIcon(iconoEscalado);
+
+                panelInterno.add(img2);
+                
+            }
+
+            columna = columna.getSiguiente();
+            
+        }
+        
+        panelInterno.repaint();
+        panelExterno.setViewportView(panelInterno);
         
     }
     
@@ -150,24 +213,73 @@ public class MatrizDispersa extends JFrame implements ActionListener {
     
         if(e.getSource() == botonIngresoA){
         
-            panelInternoA.removeAll();
-            panelInternoA.repaint();
+            int indicefilaA = Integer.parseInt(filaA.getText());
+            int indiceColA = Integer.parseInt(columnaA.getText());
+            double contenidoA = Double.parseDouble(valorA.getText());
             
-            panelExternoA.setViewportView(panelInternoA);
+            matrizA.ingresarFila(indiceColA, indicefilaA, contenidoA);
+            pintar(panelInternoA, panelExternoA, matrizA);
             
         } else if(e.getSource() == botonIngresoB){
         
-            panelInternoB.removeAll();
-            panelInternoB.repaint();
+            int indicefilaB = Integer.parseInt(filaB.getText());
+            int indiceColB = Integer.parseInt(columnaB.getText());
+            double contenidoB = Double.parseDouble(valorB.getText());
             
-            panelExternoB.setViewportView(panelInternoB);
+            matrizB.ingresarFila(indiceColB, indicefilaB, contenidoB);
+            pintar(panelInternoB, panelExternoB, matrizB);
             
         } else if(e.getSource() == botonSumar){
         
-            panelInternoR.removeAll();
-            panelInternoR.repaint();
+            ListaColumnas matrizR = new ListaColumnas();
             
-            panelExternoR.setViewportView(panelInternoR);
+            NodoColumna columna = matrizA.getCabezaColumna();
+            
+            for(int i = 0; i < matrizA.getColumnas(); i++){
+            
+                NodoFila fila = columna.getFilas().getCabezaFila();
+
+                for(int j = 0; j < columna.getCantidadFilas(); j++){
+
+                    matrizR.ingresarFila(columna.getIndiceColumna(), fila.getIndiceFila(), fila.getValor());
+
+                    fila = fila.getAbajo();
+
+                }
+
+                columna = columna.getSiguiente();
+            
+            }
+            
+            columna = matrizB.getCabezaColumna();
+            
+            NodoColumna tempColumna = matrizR.getCabezaColumna();
+            
+            for(int i = 0; i < matrizB.getColumnas(); i++){
+            
+                NodoFila fila = columna.getFilas().getCabezaFila();
+
+                for(int j = 0; j < columna.getCantidadFilas(); j++){
+
+                    if(matrizR.consultar(columna.getIndiceColumna(), fila.getIndiceFila()) != -100000.0){
+                    
+                        matrizR.ingresarFila(columna.getIndiceColumna(), fila.getIndiceFila(), fila.getValor() + matrizR.consultar(columna.getIndiceColumna(), fila.getIndiceFila()));
+                        
+                    } else {
+
+                        matrizR.ingresarFila(columna.getIndiceColumna(), fila.getIndiceFila(), fila.getValor());
+                        
+                    }
+
+                    fila = fila.getAbajo();
+
+                }
+
+                columna = columna.getSiguiente();
+            
+            }
+            
+            pintar(panelInternoR, panelExternoR, matrizR);
             
         }
 
